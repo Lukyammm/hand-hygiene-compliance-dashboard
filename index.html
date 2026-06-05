@@ -43,7 +43,11 @@
         }
 
         .chart-container.chart-distribuicao {
-            height: 192px;
+            height: 260px;
+        }
+
+        .dashboard-card {
+            min-height: 100%;
         }
 
         .chart-container.chart-xxlarge {
@@ -260,18 +264,18 @@
                     <div class="chart-container chart-xlarge flex-1"><canvas id="momentoChart"></canvas></div>
                 </div>
 
-                <div class="bg-white rounded-3xl shadow-lg p-6 flex flex-col lg:col-span-2 xl:col-span-2 xl:row-span-2">
+                <div class="bg-white rounded-3xl shadow-lg p-6 flex flex-col lg:col-span-2 xl:col-span-2 xl:row-span-2 dashboard-card">
                     <div class="flex justify-between items-baseline mb-5">
                         <h3 class="font-semibold text-slate-800">Adesão por Unidade</h3>
                     </div>
                     <div class="chart-container chart-xxlarge flex-1"><canvas id="unidadeChart"></canvas></div>
                 </div>
 
-                <div class="bg-white rounded-3xl shadow-lg p-6 flex flex-col xl:col-span-2">
+                <div class="bg-white rounded-3xl shadow-lg p-6 flex flex-col lg:col-span-2 xl:col-span-2 xl:row-span-2 dashboard-card">
                     <div class="flex justify-between items-baseline mb-5">
                         <h3 class="font-semibold text-slate-800">Por Categoria Profissional</h3>
                     </div>
-                    <div class="chart-container chart-categoria flex-1"><canvas id="categoriaChart"></canvas></div>
+                    <div class="chart-container chart-xxlarge chart-categoria flex-1"><canvas id="categoriaChart"></canvas></div>
                 </div>
 
                 <div class="bg-white rounded-3xl shadow-lg p-6 flex flex-col">
@@ -286,6 +290,20 @@
                         <h3 class="font-semibold text-slate-800">Distribuição por Método</h3>
                     </div>
                     <div class="chart-container chart-distribuicao flex-1"><canvas id="metodoChart"></canvas></div>
+                </div>
+
+                <div class="bg-white rounded-3xl shadow-lg p-6 flex flex-col">
+                    <div class="flex justify-between items-baseline mb-5">
+                        <h3 class="font-semibold text-slate-800">Dispensadores de Álcool/Sabão</h3>
+                    </div>
+                    <div class="chart-container chart-distribuicao flex-1"><canvas id="dispensadoresChart"></canvas></div>
+                </div>
+
+                <div class="bg-white rounded-3xl shadow-lg p-6 flex flex-col">
+                    <div class="flex justify-between items-baseline mb-5">
+                        <h3 class="font-semibold text-slate-800">Profissional sem Adornos</h3>
+                    </div>
+                    <div class="chart-container chart-distribuicao flex-1"><canvas id="adornosChart"></canvas></div>
                 </div>
             </div>
 
@@ -324,6 +342,8 @@
                                 <th class="text-left px-8 py-4 font-medium text-slate-500 text-xs tracking-widest">AÇÃO</th>
                                 <th class="text-left px-8 py-4 font-medium text-slate-500 text-xs tracking-widest">SITUAÇÃO</th>
                                 <th class="text-left px-8 py-4 font-medium text-slate-500 text-xs tracking-widest">MÉTODO</th>
+                                <th class="text-left px-8 py-4 font-medium text-slate-500 text-xs tracking-widest">DISPENSADORES</th>
+                                <th class="text-left px-8 py-4 font-medium text-slate-500 text-xs tracking-widest">SEM ADORNOS</th>
                                 <th class="text-left px-8 py-4 font-medium text-slate-500 text-xs tracking-widest">PREENCHIMENTO</th>
                             </tr>
                         </thead>
@@ -638,7 +658,6 @@
                 if (chartInstances[key]) chartInstances[key].destroy();
             });
 
-            adjustCategoriaChartHeight(chartData?.porCategoria?.labels || []);
 
             const commonOptions = {
                 responsive: true,
@@ -873,6 +892,29 @@
                 }
             });
 
+            const conformityChartOptions = {
+                ...commonOptions,
+                plugins: {
+                    legend: {
+                        ...commonOptions.plugins.legend,
+                        position: 'bottom',
+                        labels: {
+                            ...commonOptions.plugins.legend.labels,
+                            padding: 14
+                        }
+                    },
+                    datalabels: {
+                        ...getDataLabelStyle('#ffffff'),
+                        font: { weight: '700', size: 18 },
+                        formatter: (value, context) => {
+                            const total = context.dataset.data.reduce((sum, item) => sum + item, 0);
+                            if (!total) return '0%';
+                            return `${Math.round((value / total) * 100)}%`;
+                        }
+                    }
+                }
+            };
+
             // Distribuição Situação
             chartInstances.situacao = new Chart(document.getElementById('situacaoChart'), {
                 type: 'pie',
@@ -883,28 +925,7 @@
                         backgroundColor: ['#10b981', '#f43f5e', '#f59e0b']
                     }]
                 },
-                options: {
-                    ...commonOptions,
-                    plugins: {
-                        legend: {
-                            ...commonOptions.plugins.legend,
-                            position: 'bottom',
-                            labels: {
-                                ...commonOptions.plugins.legend.labels,
-                                padding: 14
-                            }
-                        },
-                        datalabels: {
-                            ...getDataLabelStyle('#ffffff'),
-                            font: { weight: '700', size: 20 },
-                            formatter: (value, context) => {
-                                const total = context.dataset.data.reduce((sum, item) => sum + item, 0);
-                                if (!total) return '0%';
-                                return `${Math.round((value / total) * 100)}%`;
-                            }
-                        }
-                    }
-                }
+                options: conformityChartOptions
             });
 
             // Distribuição Método
@@ -917,41 +938,34 @@
                         backgroundColor: ['#0ea5e9', '#8b5cf6', '#ec4899', '#f59e0b', '#64748b']
                     }]
                 },
-                options: {
-                    ...commonOptions,
-                    plugins: {
-                        legend: {
-                            ...commonOptions.plugins.legend,
-                            position: 'bottom',
-                            labels: {
-                                ...commonOptions.plugins.legend.labels,
-                                padding: 14
-                            }
-                        },
-                        datalabels: {
-                            ...getDataLabelStyle('#ffffff'),
-                            font: { weight: '700', size: 20 },
-                            formatter: (value, context) => {
-                                const total = context.dataset.data.reduce((sum, item) => sum + item, 0);
-                                if (!total) return '0%';
-                                return `${Math.round((value / total) * 100)}%`;
-                            }
-                        }
-                    }
-                }
+                options: conformityChartOptions
             });
-        }
 
-        function adjustCategoriaChartHeight(labels) {
-            const categoriaContainer = document.querySelector('#categoriaChart')?.closest('.chart-container');
-            if (!categoriaContainer) return;
+            // Dispensadores de álcool em gel e sabão líquido
+            chartInstances.dispensadores = new Chart(document.getElementById('dispensadoresChart'), {
+                type: 'pie',
+                data: {
+                    labels: chartData.distribuicaoDispensadores.labels,
+                    datasets: [{
+                        data: chartData.distribuicaoDispensadores.data,
+                        backgroundColor: ['#10b981', '#f43f5e', '#94a3b8', '#64748b']
+                    }]
+                },
+                options: conformityChartOptions
+            });
 
-            const totalCategorias = Array.isArray(labels) ? labels.length : 0;
-            const alturaBase = 420;
-            const alturaPorCategoria = 56;
-            const alturaCalculada = Math.max(alturaBase, totalCategorias * alturaPorCategoria);
-
-            categoriaContainer.style.height = `${alturaCalculada}px`;
+            // Profissional responsável sem adornos
+            chartInstances.adornos = new Chart(document.getElementById('adornosChart'), {
+                type: 'pie',
+                data: {
+                    labels: chartData.distribuicaoAdornos.labels,
+                    datasets: [{
+                        data: chartData.distribuicaoAdornos.data,
+                        backgroundColor: ['#10b981', '#f43f5e', '#94a3b8', '#64748b']
+                    }]
+                },
+                options: conformityChartOptions
+            });
         }
 
         // ====================== INSIGHTS ======================
@@ -988,6 +1002,8 @@
                         </span>
                     </td>
                     <td class="px-8 py-4 text-xs">${row.metodo}</td>
+                    <td class="px-8 py-4">${renderConformityBadge(row.dispensadores)}</td>
+                    <td class="px-8 py-4">${renderConformityBadge(row.adornos)}</td>
                     <td class="px-8 py-4">
                         <span class="px-4 py-1 text-xs font-semibold rounded-3xl
                             ${row.preenchimento === 'Completo' ? 'bg-sky-100 text-sky-700' : 'bg-orange-100 text-orange-700'}">
@@ -998,19 +1014,28 @@
             `).join('');
 
             if (totalRows > MAX_TABLE_ROWS_RENDER) {
-                tbody.innerHTML += `<tr><td colspan="8" class="px-8 py-4 text-center text-amber-700 bg-amber-50 text-xs font-medium">Exibindo os primeiros ${MAX_TABLE_ROWS_RENDER} registros para manter a interface rápida. O CSV exporta todos os registros filtrados.</td></tr>`;
+                tbody.innerHTML += `<tr><td colspan="10" class="px-8 py-4 text-center text-amber-700 bg-amber-50 text-xs font-medium">Exibindo os primeiros ${MAX_TABLE_ROWS_RENDER} registros para manter a interface rápida. O CSV exporta todos os registros filtrados.</td></tr>`;
             }
 
             if (tableData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="px-8 py-12 text-center text-slate-400">Nenhum registro encontrado com os filtros aplicados.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="px-8 py-12 text-center text-slate-400">Nenhum registro encontrado com os filtros aplicados.</td></tr>`;
             }
+        }
+
+        function renderConformityBadge(value) {
+            const status = value || 'Não informado';
+            const classes = status === 'Conforme' ? 'bg-emerald-100 text-emerald-700' :
+                status === 'Não conforme' ? 'bg-red-100 text-red-700' :
+                status === 'Não se aplica' ? 'bg-slate-100 text-slate-600' : 'bg-amber-100 text-amber-700';
+
+            return `<span class="px-4 py-1 text-xs font-semibold rounded-3xl whitespace-nowrap inline-flex ${classes}">${status}</span>`;
         }
 
         // ====================== EXPORT CSV ======================
         function exportToCSV() {
             if (!currentResponse || !currentResponse.tableData) return;
 
-            const headers = ['Data', 'Unidade', 'Categoria Profissional', 'Momento', 'Ação', 'Situação', 'Método', 'Preenchimento'];
+            const headers = ['Data', 'Unidade', 'Categoria Profissional', 'Momento', 'Ação', 'Situação', 'Método', 'Dispensadores', 'Sem Adornos', 'Preenchimento'];
             let csv = headers.join(';') + '\n';
 
             currentResponse.tableData.forEach(row => {
@@ -1022,6 +1047,8 @@
                     `"${row.acao.replace(/"/g, '""')}"`,
                     `"${row.situacao}"`,
                     `"${row.metodo}"`,
+                    `"${row.dispensadores}"`,
+                    `"${row.adornos}"`,
                     `"${row.preenchimento}"`
                 ].join(';') + '\n';
             });
