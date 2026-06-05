@@ -2,7 +2,7 @@
 
 const SPREADSHEET_ID = '1Z6X27MIUZ87czGEKyZmJvnqxsarmSEmSt4ifYpp2yMk';  // ← Planilha que você enviou
 const SHEET_NAME = 'Respostas ao formulário 1';
-const MIN_REQUIRED_COLUMNS = 5;
+const MIN_REQUIRED_COLUMNS = 7;
 const LOWERCASE_CONNECTORS = new Set(['de', 'da', 'do', 'das', 'dos', 'e', 'em', 'na', 'no', 'nas', 'nos', 'a', 'o']);
 
 function doGet() {
@@ -75,6 +75,8 @@ function normalizeRecords(rawData) {
     let categoria = String(row[2] || '').trim();
     let momento = String(row[3] || '').trim();
     let acaoRaw = String(row[4] || '').trim();
+    const dispensadores = normalizeConformityStatus(row[5]);
+    const adornos = normalizeConformityStatus(row[6]);
     
     unidade = toDisplayCase(unidade);
     categoria = toDisplayCase(categoria);
@@ -99,6 +101,8 @@ function normalizeRecords(rawData) {
       acao: acao,
       situacao: situacao,
       metodo: metodo,
+      dispensadores: dispensadores,
+      adornos: adornos,
       preenchimento: preenchimento
     });
   }
@@ -126,12 +130,28 @@ function toDisplayCase(str) {
 }
 
 // ====================== CLASSIFICAÇÃO ======================
-function normalizeActionText(acao) {
-  return String(acao || '')
+function normalizeConformityStatus(value) {
+  const normalized = normalizeComparableText(value);
+
+  if (!normalized) return 'Não informado';
+  if (normalized === 'conforme') return 'Conforme';
+  if (normalized === 'nao conforme') return 'Não conforme';
+  if (normalized === 'nao se aplica' || normalized === 'nao aplicavel') return 'Não se aplica';
+
+  return toDisplayCase(value);
+}
+
+function normalizeComparableText(value) {
+  return String(value || '')
     .trim()
+    .replace(/\s+/g, ' ')
     .toLocaleLowerCase('pt-BR')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
+}
+
+function normalizeActionText(acao) {
+  return normalizeComparableText(acao);
 }
 
 function classifyAction(acao) {
@@ -258,7 +278,9 @@ function buildChartData(filtered) {
     porCategoria: buildGroupData(filtered, 'categoria'),
     porMomento: buildGroupData(filtered, 'momento'),
     distribuicaoSituacao: buildPieData(filtered, 'situacao'),
-    distribuicaoMetodo: buildPieData(filtered, 'metodo')
+    distribuicaoMetodo: buildPieData(filtered, 'metodo'),
+    distribuicaoDispensadores: buildPieData(filtered, 'dispensadores'),
+    distribuicaoAdornos: buildPieData(filtered, 'adornos')
   };
 }
 
@@ -315,6 +337,9 @@ function buildPieData(filtered, key) {
   } else if (key === 'metodo') {
     const metodoOrder = ['Água e sabonete', 'Fricção com álcool', 'Não realizado', 'Realizado sem método detalhado', 'Não informado'];
     labels = metodoOrder.filter(label => counts[label] !== undefined);
+  } else if (key === 'dispensadores' || key === 'adornos') {
+    const conformityOrder = ['Conforme', 'Não conforme', 'Não se aplica', 'Não informado'];
+    labels = conformityOrder.filter(label => counts[label] !== undefined);
   } else {
     labels = Object.keys(counts);
   }
@@ -365,6 +390,8 @@ function prepareTableData(filteredRecords) {
       acao: r.acao,
       situacao: r.situacao,
       metodo: r.metodo,
+      dispensadores: r.dispensadores,
+      adornos: r.adornos,
       preenchimento: r.preenchimento
     }));
 }
