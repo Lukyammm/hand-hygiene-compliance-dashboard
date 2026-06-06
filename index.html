@@ -664,9 +664,10 @@
 
         function onDataSuccess(response) {
             document.getElementById('loading-screen').classList.add('hidden');
+            const isFirstLoad = !document.getElementById('skeleton-screen').classList.contains('hidden');
             document.getElementById('skeleton-screen').classList.add('hidden');
             document.getElementById('tab-nav').classList.remove('hidden');
-            document.getElementById('tab-content-overview').classList.remove('hidden');
+            if (isFirstLoad) switchTab('overview');
 
             if (!response.success) { showErrorModal(response.error); return; }
 
@@ -688,9 +689,10 @@
 
         function onDataError(err) {
             document.getElementById('loading-screen').classList.add('hidden');
+            const isFirstLoadErr = !document.getElementById('skeleton-screen').classList.contains('hidden');
             document.getElementById('skeleton-screen').classList.add('hidden');
             document.getElementById('tab-nav').classList.remove('hidden');
-            document.getElementById('tab-content-overview').classList.remove('hidden');
+            if (isFirstLoadErr) switchTab('overview');
             showErrorModal(err.message || 'Erro de comunicação com o servidor');
         }
 
@@ -1058,15 +1060,23 @@
             const { B, tip, base, sY, ng } = getChartDefaults();
             Object.keys(compChartInstances).forEach(k => { if (compChartInstances[k]) compChartInstances[k].destroy(); });
 
+            // Alinha séries temporais por label (mês), evitando desalinhamento entre períodos
+            const allTemporalLabels = [...new Set([
+                ...compDataA.chartData.temporal.labels,
+                ...compDataB.chartData.temporal.labels
+            ])];
+            const getTemporalVal = (data, label) => {
+                const idx = data.chartData.temporal.labels.indexOf(label);
+                return idx >= 0 ? data.chartData.temporal.adesao[idx] : null;
+            };
+
             compChartInstances.temporal = new Chart(document.getElementById('compTemporalChart'), {
                 type: 'line',
                 data: {
-                    labels: compDataA.chartData.temporal.labels.length >= compDataB.chartData.temporal.labels.length
-                        ? compDataA.chartData.temporal.labels
-                        : compDataB.chartData.temporal.labels,
+                    labels: allTemporalLabels,
                     datasets: [
-                        { label: `Período A (${labelA})`, data: compDataA.chartData.temporal.adesao, borderColor: B, backgroundColor: 'rgba(5,150,105,0.07)', borderWidth: 2.5, tension: 0.35, fill: true, pointRadius: 3, pointBackgroundColor: B, pointBorderColor: '#fff', pointBorderWidth: 2 },
-                        { label: `Período B (${labelB})`, data: compDataB.chartData.temporal.adesao, borderColor: '#94a3b8', backgroundColor: 'rgba(148,163,184,0.05)', borderWidth: 2, tension: 0.35, fill: false, pointRadius: 3, pointBackgroundColor: '#94a3b8', pointBorderColor: '#fff', pointBorderWidth: 2, borderDash: [5,4] }
+                        { label: `Período A (${labelA})`, data: allTemporalLabels.map(l => getTemporalVal(compDataA, l)), borderColor: B, backgroundColor: 'rgba(5,150,105,0.07)', borderWidth: 2.5, tension: 0.35, fill: true, pointRadius: 3, pointBackgroundColor: B, pointBorderColor: '#fff', pointBorderWidth: 2, spanGaps: true },
+                        { label: `Período B (${labelB})`, data: allTemporalLabels.map(l => getTemporalVal(compDataB, l)), borderColor: '#94a3b8', backgroundColor: 'rgba(148,163,184,0.05)', borderWidth: 2, tension: 0.35, fill: false, pointRadius: 3, pointBackgroundColor: '#94a3b8', pointBorderColor: '#fff', pointBorderWidth: 2, borderDash: [5,4], spanGaps: true }
                     ]
                 },
                 options: { ...base, scales: { y: sY, x: { ...ng, ticks: { color: '#94a3b8', font: { size: 11 } } } }, plugins: { legend: { display: true }, tooltip: tip, datalabels: { display: false } } }
