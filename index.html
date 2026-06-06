@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
         :root {
             --brand-500: #10b981;
@@ -19,7 +19,6 @@
 
         html { scroll-behavior: smooth; }
 
-        /* Background com textura de grid pontilhado */
         body {
             background-color: #f4f6f9;
             background-image:
@@ -31,13 +30,11 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Header com linha gradiente na base */
         .header-gradient-line {
             background: linear-gradient(90deg, var(--brand-600), rgba(5,150,105,0) 60%);
             height: 2px;
         }
 
-        /* Card base */
         .card {
             background: #ffffff;
             border: 1px solid var(--line);
@@ -54,7 +51,6 @@
             box-shadow: 0 12px 28px -14px rgba(15,23,42,0.22);
         }
 
-        /* Borda-status lateral nos KPI cards */
         .kpi-card { min-height: 142px; position: relative; overflow: hidden; }
         .kpi-card::before {
             content: '';
@@ -68,7 +64,6 @@
         .kpi-card.status-warning::before  { background: linear-gradient(180deg, #f59e0b, #d97706); }
         .kpi-card.status-danger::before   { background: linear-gradient(180deg, #f43f5e, #be123c); }
 
-        /* Acento vertical */
         .accent-bar {
             width: 4px;
             border-radius: 9999px;
@@ -76,7 +71,6 @@
             flex-shrink: 0;
         }
 
-        /* Badge de valor no cabeçalho dos gráficos */
         .chart-value-badge {
             font-size: 11px;
             font-weight: 700;
@@ -88,7 +82,6 @@
             letter-spacing: 0.02em;
         }
 
-        /* Botão primário */
         .btn-primary {
             background: var(--brand-600);
             color: #fff;
@@ -98,7 +91,6 @@
         .btn-primary:hover  { background: var(--brand-700); }
         .btn-primary:active { transform: translateY(1px); }
 
-        /* Skeleton shimmer */
         .skeleton {
             background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
             background-size: 200% 100%;
@@ -107,16 +99,15 @@
         }
         @keyframes shimmer { to { background-position: -200% 0; } }
 
-        /* Gráficos */
         .chart-container { height: 320px; position: relative; }
         .chart-container.chart-tall      { height: 360px; }
         .chart-container.chart-xlarge    { height: 420px; }
         .chart-container.chart-categoria { min-height: 840px; }
         .chart-container.chart-distribuicao { height: 260px; }
         .chart-container.chart-xxlarge   { height: 1120px; }
+        .chart-container.chart-comparison { height: 360px; }
         .dashboard-card { min-height: 100%; }
 
-        /* Filtros */
         .filter-collapse {
             overflow: hidden;
             max-height: 0;
@@ -137,7 +128,6 @@
         }
         .multi-filter-options { max-height: 140px; overflow-y: auto; }
 
-        /* Scrollbars */
         .multi-filter-options::-webkit-scrollbar,
         .table-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
         .multi-filter-options::-webkit-scrollbar-thumb,
@@ -145,7 +135,6 @@
         .multi-filter-options::-webkit-scrollbar-track,
         .table-scroll::-webkit-scrollbar-track { background: transparent; }
 
-        /* Sticky column na tabela */
         .table-col-sticky {
             position: sticky;
             left: 0;
@@ -163,7 +152,6 @@
             .chart-container.chart-categoria { min-height: 600px; }
         }
 
-        /* Animação de entrada */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(12px); }
             to   { opacity: 1; transform: translateY(0); }
@@ -175,11 +163,62 @@
         .fade-up-4 { animation-delay: 0.20s; }
         .fade-up-5 { animation-delay: 0.25s; }
 
-        /* Contador animado */
         .kpi-value { transition: opacity 0.3s ease; }
-
         .loading-spinner { animation: spin 1.2s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Abas */
+        .tab-btn {
+            position: relative;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            border-radius: 0.5rem;
+            transition: color .2s, background .2s;
+            white-space: nowrap;
+        }
+        .tab-btn:hover { color: #059669; background: #f0fdf4; }
+        .tab-btn.active { color: #059669; background: #ecfdf5; }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 16px; right: 16px;
+            height: 2px;
+            background: #059669;
+            border-radius: 9999px;
+        }
+
+        /* Alerta bar */
+        .alert-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 9999px;
+        }
+        .alert-chip.warning { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+        .alert-chip.danger  { background: #ffe4e6; color: #9f1239; border: 1px solid #fecdd3; }
+
+        /* KPI comparativo */
+        .comp-kpi-card {
+            border-radius: 0.75rem;
+            border: 1px solid var(--line);
+            background: #fff;
+            padding: 14px 16px;
+        }
+        .delta-up   { color: #059669; }
+        .delta-down { color: #e11d48; }
+        .delta-flat { color: #94a3b8; }
+
+        /* Relatório print */
+        @media print {
+            header, #tab-nav, #alerts-bar, .card:has(#filters-collapse), button { display: none !important; }
+            body { background: white; }
+            .card { box-shadow: none; border: 1px solid #e2e8f0; }
+        }
     </style>
 </head>
 <body class="font-sans text-slate-700">
@@ -219,7 +258,7 @@
         <div class="header-gradient-line"></div>
     </header>
 
-    <div class="max-w-screen-2xl mx-auto px-4 md:px-8 py-8">
+    <div class="max-w-screen-2xl mx-auto px-4 md:px-8 py-6">
 
         <!-- LOADING TOAST -->
         <div id="loading-screen" class="fixed top-20 right-6 z-[9999] hidden pointer-events-none">
@@ -231,6 +270,7 @@
 
         <!-- SKELETON -->
         <div id="skeleton-screen">
+            <div class="h-12 skeleton rounded-xl mb-6"></div>
             <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-5 mb-8">
                 <div class="skeleton h-[142px]"></div>
                 <div class="skeleton h-[142px]"></div>
@@ -245,10 +285,40 @@
             </div>
         </div>
 
-        <div id="main-content" class="hidden">
+        <!-- NAVEGAÇÃO POR ABAS -->
+        <div id="tab-nav" class="hidden mb-6">
+            <div class="bg-white border border-slate-200 rounded-xl px-2 py-1.5 flex items-center gap-1 overflow-x-auto shadow-sm">
+                <button class="tab-btn active" onclick="switchTab('overview')" id="tab-overview">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline-block mr-1.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"/></svg>
+                    Visão Geral
+                </button>
+                <button class="tab-btn" onclick="switchTab('comparison')" id="tab-comparison">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline-block mr-1.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>
+                    Comparativo
+                </button>
+                <button class="tab-btn" onclick="switchTab('reports')" id="tab-reports">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline-block mr-1.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+                    Relatórios
+                </button>
+            </div>
+        </div>
+
+        <!-- ======= ABA: VISÃO GERAL ======= -->
+        <div id="tab-content-overview" class="hidden">
 
             <!-- KPI CARDS -->
-            <div id="kpi-grid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-5 mb-8"></div>
+            <div id="kpi-grid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-5 mb-5"></div>
+
+            <!-- BARRA DE ALERTAS -->
+            <div id="alerts-bar" class="hidden mb-6 card px-5 py-3.5 border-amber-200 bg-amber-50/60 fade-up">
+                <div class="flex items-start gap-3 flex-wrap">
+                    <div class="flex items-center gap-1.5 shrink-0 mt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-600" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd"/></svg>
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-amber-700">Atenção</span>
+                    </div>
+                    <div id="alerts-chips" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
 
             <!-- FILTROS -->
             <div class="card p-5 md:p-7 mb-8 fade-up">
@@ -409,6 +479,137 @@
                 </div>
             </section>
         </div>
+
+        <!-- ======= ABA: COMPARATIVO ======= -->
+        <div id="tab-content-comparison" class="hidden">
+            <div class="card p-6 md:p-8 mb-6 fade-up">
+                <div class="flex items-center gap-2.5 mb-6">
+                    <span class="accent-bar h-5"></span>
+                    <h2 class="text-lg font-semibold text-slate-800">Comparativo de Períodos</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                            <span class="text-sm font-semibold text-slate-700">Período A</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <input id="compAInicio" type="date" class="border border-slate-200 bg-white rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition w-40">
+                            <span class="text-slate-300">—</span>
+                            <input id="compAFim" type="date" class="border border-slate-200 bg-white rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition w-40">
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-3 h-3 rounded-full bg-slate-400 inline-block"></span>
+                            <span class="text-sm font-semibold text-slate-700">Período B</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <input id="compBInicio" type="date" class="border border-slate-200 bg-white rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition w-40">
+                            <span class="text-slate-300">—</span>
+                            <input id="compBFim" type="date" class="border border-slate-200 bg-white rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition w-40">
+                        </div>
+                    </div>
+                </div>
+                <button onclick="runComparison()" class="btn-primary px-6 py-2.5 rounded-lg text-sm font-semibold inline-flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>
+                    Comparar
+                </button>
+            </div>
+
+            <div id="comp-loading" class="hidden text-center py-16">
+                <div class="loading-spinner w-8 h-8 border-2 border-emerald-200 border-t-emerald-600 rounded-full inline-block mb-3"></div>
+                <p class="text-sm text-slate-500">Carregando dados dos dois períodos...</p>
+            </div>
+
+            <div id="comp-results" class="hidden">
+                <!-- KPIs comparativos -->
+                <div id="comp-kpis" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-6"></div>
+                <!-- Gráfico de linha dupla -->
+                <div class="card p-6 mb-6 fade-up">
+                    <div class="flex items-center gap-2.5 mb-5">
+                        <span class="accent-bar h-4"></span>
+                        <h3 class="text-[15px] font-semibold text-slate-800">Evolução Temporal — Período A vs B</h3>
+                    </div>
+                    <div class="chart-container chart-comparison"><canvas id="compTemporalChart"></canvas></div>
+                </div>
+                <!-- Barras lado a lado por unidade -->
+                <div class="card p-6 fade-up">
+                    <div class="flex items-center gap-2.5 mb-5">
+                        <span class="accent-bar h-4"></span>
+                        <h3 class="text-[15px] font-semibold text-slate-800">Adesão por Unidade — Período A vs B</h3>
+                    </div>
+                    <div class="chart-container chart-xxlarge"><canvas id="compUnidadeChart"></canvas></div>
+                </div>
+            </div>
+
+            <div id="comp-empty" class="text-center py-20 text-slate-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto mb-3 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>
+                <p class="text-sm font-medium">Selecione dois períodos e clique em Comparar</p>
+            </div>
+        </div>
+
+        <!-- ======= ABA: RELATÓRIOS ======= -->
+        <div id="tab-content-reports" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Exportação -->
+                <div class="card p-6 fade-up">
+                    <div class="flex items-center gap-2.5 mb-5">
+                        <span class="accent-bar h-4"></span>
+                        <h3 class="text-[15px] font-semibold text-slate-800">Exportar Dados</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <button onclick="printReport()"
+                                class="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-emerald-200 hover:bg-emerald-50/40 transition group">
+                            <span class="flex items-center justify-center w-10 h-10 rounded-lg bg-rose-50 text-rose-500 group-hover:bg-rose-100 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+                            </span>
+                            <div class="text-left">
+                                <p class="text-sm font-semibold text-slate-800">Exportar PDF</p>
+                                <p class="text-xs text-slate-500 mt-0.5">Imprime a visão geral atual (KPIs + gráficos)</p>
+                            </div>
+                        </button>
+                        <button onclick="exportToCSV()"
+                                class="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-emerald-200 hover:bg-emerald-50/40 transition group">
+                            <span class="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-3.75.125c0-.621.504-1.125 1.125-1.125h17.25c.621 0 1.125.504 1.125 1.125M6 18.375V6.375m0 12V6.375m0 0A2.625 2.625 0 0 1 8.625 3.75h6.75A2.625 2.625 0 0 1 18 6.375m0 12V6.375"/></svg>
+                            </span>
+                            <div class="text-left">
+                                <p class="text-sm font-semibold text-slate-800">Exportar CSV</p>
+                                <p class="text-xs text-slate-500 mt-0.5">Baixa todos os registros filtrados em planilha</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Resumo do período -->
+                <div class="card p-6 fade-up">
+                    <div class="flex items-center gap-2.5 mb-5">
+                        <span class="accent-bar h-4"></span>
+                        <h3 class="text-[15px] font-semibold text-slate-800">Resumo do Período</h3>
+                    </div>
+                    <div id="report-summary" class="space-y-2">
+                        <p class="text-sm text-slate-400">Carregue dados na aba Visão Geral para ver o resumo aqui.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights completos -->
+            <div class="card p-6 fade-up">
+                <div class="flex items-center gap-2.5 mb-5">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 18h6m-5 3h4m-7-9a5 5 0 1110 0c0 1.9-.93 3.57-2.36 4.6-.62.45-1.14 1.13-1.14 1.9V19H10.5v-.5c0-.77-.52-1.45-1.14-1.9A5.64 5.64 0 017 12z"/>
+                        </svg>
+                    </span>
+                    <h2 class="text-[15px] font-semibold text-slate-800">Análise Automática</h2>
+                </div>
+                <div id="report-insights" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <p class="text-sm text-slate-400">Carregue dados na aba Visão Geral para ver a análise aqui.</p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -417,6 +618,7 @@
         }
 
         let allRecords = null, currentResponse = null, chartInstances = {}, chartPluginsRegistered = false;
+        let compChartInstances = {};
         const MAX_TABLE_ROWS_RENDER = 1000;
         const FILTER_MULTSELECT_CONFIG = [
             { id:'unidades', panelId:'unidades-panel' }, { id:'categorias', panelId:'categorias-panel' },
@@ -424,16 +626,25 @@
             { id:'metodos', panelId:'metodos-panel' }
         ];
 
+        // ====================== ABAS ======================
+        function switchTab(name) {
+            ['overview','comparison','reports'].forEach(t => {
+                document.getElementById('tab-content-' + t).classList.add('hidden');
+                document.getElementById('tab-' + t).classList.remove('active');
+            });
+            document.getElementById('tab-content-' + name).classList.remove('hidden');
+            document.getElementById('tab-' + name).classList.add('active');
+        }
+
         // ====================== CONTADOR ANIMADO ======================
         function animateCounter(el, target, duration = 900) {
             const isFloat = String(target).includes('.');
-            const start = 0;
             const startTime = performance.now();
             function update(now) {
                 const elapsed = now - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 const eased = 1 - Math.pow(1 - progress, 3);
-                const current = start + (target - start) * eased;
+                const current = (target) * eased;
                 el.textContent = isFloat
                     ? current.toFixed(1)
                     : Math.round(current).toLocaleString('pt-BR');
@@ -453,8 +664,10 @@
 
         function onDataSuccess(response) {
             document.getElementById('loading-screen').classList.add('hidden');
+            const isFirstLoad = !document.getElementById('skeleton-screen').classList.contains('hidden');
             document.getElementById('skeleton-screen').classList.add('hidden');
-            document.getElementById('main-content').classList.remove('hidden');
+            document.getElementById('tab-nav').classList.remove('hidden');
+            if (isFirstLoad) switchTab('overview');
 
             if (!response.success) { showErrorModal(response.error); return; }
 
@@ -469,14 +682,51 @@
             renderAllCharts(response.chartData);
             renderInsights(response.insights);
             renderDetailTable(response.tableData);
+            renderAlerts(response.chartData);
+            renderReportSummary(response.kpis, response.insights);
             document.getElementById('last-update').textContent = new Date().toLocaleTimeString('pt-BR');
         }
 
         function onDataError(err) {
             document.getElementById('loading-screen').classList.add('hidden');
+            const isFirstLoadErr = !document.getElementById('skeleton-screen').classList.contains('hidden');
             document.getElementById('skeleton-screen').classList.add('hidden');
-            document.getElementById('main-content').classList.remove('hidden');
+            document.getElementById('tab-nav').classList.remove('hidden');
+            if (isFirstLoadErr) switchTab('overview');
             showErrorModal(err.message || 'Erro de comunicação com o servidor');
+        }
+
+        // ====================== ALERTAS ======================
+        function renderAlerts(chartData) {
+            const bar   = document.getElementById('alerts-bar');
+            const chips = document.getElementById('alerts-chips');
+            const items = [];
+
+            const checkList = [
+                { labels: chartData.porUnidade.labels,    values: chartData.porUnidade.adesaoPercent },
+                { labels: chartData.porCategoria.labels,  values: chartData.porCategoria.adesaoPercent }
+            ];
+
+            checkList.forEach(group => {
+                (group.labels || []).forEach((label, i) => {
+                    const v = Number(group.values[i]) || 0;
+                    if (v < 80) items.push({ label, value: v });
+                });
+            });
+
+            if (!items.length) { bar.classList.add('hidden'); return; }
+
+            items.sort((a, b) => a.value - b.value);
+            chips.innerHTML = items.slice(0, 8).map(item => {
+                const cls = item.value < 60 ? 'danger' : 'warning';
+                return `<span class="alert-chip ${cls}">${item.label} — ${Math.round(item.value)}%</span>`;
+            }).join('');
+
+            if (items.length > 8) {
+                chips.innerHTML += `<span class="alert-chip warning">+${items.length - 8} mais</span>`;
+            }
+
+            bar.classList.remove('hidden');
         }
 
         // ====================== RENDER KPIs ======================
@@ -561,7 +811,6 @@
                 </div>
             `;
 
-            // Dispara contadores e barra de progresso
             requestAnimationFrame(() => {
                 document.querySelectorAll('.kpi-value').forEach(el => {
                     const target = parseFloat(el.dataset.target);
@@ -665,25 +914,29 @@
         }
 
         // ====================== GRÁFICOS ======================
-        function renderAllCharts(chartData) {
+        function getChartDefaults() {
             if (!chartPluginsRegistered && window.ChartDataLabels) { Chart.register(ChartDataLabels); chartPluginsRegistered = true; }
             Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
             Chart.defaults.color = '#64748b';
-            Object.keys(chartInstances).forEach(k => { if (chartInstances[k]) chartInstances[k].destroy(); });
-
             const B = '#059669', BD = '#047857', NEG = '#e11d48', WARN = '#f59e0b', NEUT = '#94a3b8';
-            const CAT = [B, '#0ea5e9', '#6366f1', WARN, NEUT];
-            const GC = '#eef2f6';
             const tip = { backgroundColor:'rgba(15,23,42,0.92)', padding:12, cornerRadius:10, titleFont:{size:12,weight:'600'}, bodyFont:{size:12}, boxPadding:6, usePointStyle:true };
             const base = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:true, position:'top', labels:{boxWidth:10,boxHeight:10,padding:16,usePointStyle:true,color:'#475569',font:{size:12,weight:'600'}} }, tooltip:tip } };
+            const GC = '#eef2f6';
             const fmt = v => `${Math.round(Number(v)||0)}%`;
             const ls  = c => { const w = ['#ffffff','#fff','white'].includes((c||'').toLowerCase()); return { color:c, textStrokeColor: w ? '#0f172a':'#ffffff', textStrokeWidth:3 }; };
             const sY  = { beginAtZero:true, min:0, max:100, grid:{color:GC,drawBorder:false}, border:{display:false}, ticks:{callback:fmt,stepSize:20,color:'#94a3b8',font:{size:11}} };
             const sX  = { beginAtZero:true, min:0, max:100, grid:{color:GC,drawBorder:false}, border:{display:false}, ticks:{callback:fmt,stepSize:20,color:'#94a3b8',font:{size:11}} };
             const ng  = { grid:{display:false}, border:{display:false} };
             const wrap = (l,m=28) => { if(!l||l.length<=m) return l; const ws=l.split(' '),ls2=[]; let c=''; ws.forEach(w=>{const t=c?`${c} ${w}`:w; if(t.length>m&&c){ls2.push(c);c=w;}else c=t;}); if(c)ls2.push(c); return ls2; };
+            return { B, BD, NEG, WARN, NEUT, tip, base, GC, fmt, ls, sY, sX, ng, wrap };
+        }
 
-            // Badges de contexto
+        function renderAllCharts(chartData) {
+            const { B, BD, NEG, WARN, NEUT, tip, base, GC, fmt, ls, sY, sX, ng, wrap } = getChartDefaults();
+            const CAT = [B, '#0ea5e9', '#6366f1', WARN, NEUT];
+
+            Object.keys(chartInstances).forEach(k => { if (chartInstances[k]) chartInstances[k].destroy(); });
+
             setBadge('badge-temporal', chartData.temporal.adesao);
             setBadge('badge-momento', chartData.porMomento.adesaoPercent);
             setBadge('badge-unidade', chartData.porUnidade.adesaoPercent);
@@ -720,6 +973,177 @@
             chartInstances.metodo       = new Chart(document.getElementById('metodoChart'),       { type:'pie', data:{ labels:chartData.distribuicaoMetodo.labels,       datasets:[{...pb,data:chartData.distribuicaoMetodo.data,       backgroundColor:CAT}] },        options:po });
             chartInstances.dispensadores= new Chart(document.getElementById('dispensadoresChart'),{ type:'pie', data:{ labels:chartData.distribuicaoDispensadores.labels, datasets:[{...pb,data:chartData.distribuicaoDispensadores.data, backgroundColor:[B,NEG]}] },   options:po });
             chartInstances.adornos      = new Chart(document.getElementById('adornosChart'),      { type:'pie', data:{ labels:chartData.distribuicaoAdornos.labels,      datasets:[{...pb,data:chartData.distribuicaoAdornos.data,      backgroundColor:[B,NEG]}] },   options:po });
+        }
+
+        // ====================== COMPARATIVO ======================
+        let compPending = 0, compDataA = null, compDataB = null;
+
+        function runComparison() {
+            const aI = document.getElementById('compAInicio').value;
+            const aF = document.getElementById('compAFim').value;
+            const bI = document.getElementById('compBInicio').value;
+            const bF = document.getElementById('compBFim').value;
+
+            if (!aI || !aF || !bI || !bF) {
+                alert('Preencha as datas dos dois períodos antes de comparar.');
+                return;
+            }
+
+            document.getElementById('comp-empty').classList.add('hidden');
+            document.getElementById('comp-results').classList.add('hidden');
+            document.getElementById('comp-loading').classList.remove('hidden');
+
+            compPending = 2; compDataA = null; compDataB = null;
+
+            google.script.run
+                .withSuccessHandler(r => { compDataA = r; compPending--; if (!compPending) renderComparison(); })
+                .withFailureHandler(() => { document.getElementById('comp-loading').classList.add('hidden'); document.getElementById('comp-empty').classList.remove('hidden'); })
+                .getAnalysis({ dataInicio: aI, dataFim: aF });
+
+            google.script.run
+                .withSuccessHandler(r => { compDataB = r; compPending--; if (!compPending) renderComparison(); })
+                .withFailureHandler(() => { document.getElementById('comp-loading').classList.add('hidden'); document.getElementById('comp-empty').classList.remove('hidden'); })
+                .getAnalysis({ dataInicio: bI, dataFim: bF });
+        }
+
+        function renderComparison() {
+            document.getElementById('comp-loading').classList.add('hidden');
+            if (!compDataA?.success || !compDataB?.success) {
+                document.getElementById('comp-empty').classList.remove('hidden');
+                return;
+            }
+
+            const kA = compDataA.kpis, kB = compDataB.kpis;
+            const aI = document.getElementById('compAInicio').value;
+            const aF = document.getElementById('compAFim').value;
+            const bI = document.getElementById('compBInicio').value;
+            const bF = document.getElementById('compBFim').value;
+            const labelA = `${aI} → ${aF}`;
+            const labelB = `${bI} → ${bF}`;
+
+            // KPIs comparativos
+            const compKpiDefs = [
+                { label: 'Observações', keyA: kA.totalObservacoes, keyB: kB.totalObservacoes, fmt: v => Number(v).toLocaleString('pt-BR'), higherIsBetter: true },
+                { label: 'Adesão Geral', keyA: parseFloat(kA.adesaoGeral), keyB: parseFloat(kB.adesaoGeral), fmt: v => `${parseFloat(v).toFixed(1)}%`, higherIsBetter: true },
+                { label: 'Realizado', keyA: kA.totalRealizado, keyB: kB.totalRealizado, fmt: v => Number(v).toLocaleString('pt-BR'), higherIsBetter: true },
+                { label: 'Não Realizado', keyA: kA.totalNaoRealizado, keyB: kB.totalNaoRealizado, fmt: v => Number(v).toLocaleString('pt-BR'), higherIsBetter: false },
+                { label: 'Taxa Não Real.', keyA: parseFloat(kA.taxaNaoRealizacao), keyB: parseFloat(kB.taxaNaoRealizacao), fmt: v => `${parseFloat(v).toFixed(1)}%`, higherIsBetter: false }
+            ];
+
+            document.getElementById('comp-kpis').innerHTML = compKpiDefs.map(d => {
+                const vA = Number(d.keyA) || 0;
+                const vB = Number(d.keyB) || 0;
+                const delta = vA - vB;
+                const improved = d.higherIsBetter ? delta > 0 : delta < 0;
+                const neutral  = Math.abs(delta) < 0.01;
+                const deltaClass = neutral ? 'delta-flat' : improved ? 'delta-up' : 'delta-down';
+                const arrow = neutral ? '→' : delta > 0 ? '↑' : '↓';
+                const deltaStr = neutral ? 'Igual' : `${arrow} ${Math.abs(delta % 1 === 0 ? delta : parseFloat(delta.toFixed(1)))}${String(d.keyA).includes('.') ? '%' : ''}`;
+                return `
+                <div class="comp-kpi-card fade-up">
+                    <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">${d.label}</p>
+                    <div class="flex items-end justify-between gap-2 mb-2">
+                        <div>
+                            <span class="text-[10px] text-emerald-600 font-semibold">A</span>
+                            <span class="text-xl font-bold text-slate-800 ml-1">${d.fmt(vA)}</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 font-semibold">B</span>
+                            <span class="text-lg font-semibold text-slate-500 ml-1">${d.fmt(vB)}</span>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold ${deltaClass}">${deltaStr}</span>
+                </div>`;
+            }).join('');
+
+            // Gráficos comparativos
+            const { B, tip, base, sY, ng } = getChartDefaults();
+            Object.keys(compChartInstances).forEach(k => { if (compChartInstances[k]) compChartInstances[k].destroy(); });
+
+            // Alinha séries temporais por label (mês), evitando desalinhamento entre períodos
+            const allTemporalLabels = [...new Set([
+                ...compDataA.chartData.temporal.labels,
+                ...compDataB.chartData.temporal.labels
+            ])];
+            const getTemporalVal = (data, label) => {
+                const idx = data.chartData.temporal.labels.indexOf(label);
+                return idx >= 0 ? data.chartData.temporal.adesao[idx] : null;
+            };
+
+            compChartInstances.temporal = new Chart(document.getElementById('compTemporalChart'), {
+                type: 'line',
+                data: {
+                    labels: allTemporalLabels,
+                    datasets: [
+                        { label: `Período A (${labelA})`, data: allTemporalLabels.map(l => getTemporalVal(compDataA, l)), borderColor: B, backgroundColor: 'rgba(5,150,105,0.07)', borderWidth: 2.5, tension: 0.35, fill: true, pointRadius: 3, pointBackgroundColor: B, pointBorderColor: '#fff', pointBorderWidth: 2, spanGaps: true },
+                        { label: `Período B (${labelB})`, data: allTemporalLabels.map(l => getTemporalVal(compDataB, l)), borderColor: '#94a3b8', backgroundColor: 'rgba(148,163,184,0.05)', borderWidth: 2, tension: 0.35, fill: false, pointRadius: 3, pointBackgroundColor: '#94a3b8', pointBorderColor: '#fff', pointBorderWidth: 2, borderDash: [5,4], spanGaps: true }
+                    ]
+                },
+                options: { ...base, scales: { y: sY, x: { ...ng, ticks: { color: '#94a3b8', font: { size: 11 } } } }, plugins: { legend: { display: true }, tooltip: tip, datalabels: { display: false } } }
+            });
+
+            // Barras agrupadas por unidade
+            const allUnidades = [...new Set([...compDataA.chartData.porUnidade.labels, ...compDataB.chartData.porUnidade.labels])];
+            const getVal = (data, label) => {
+                const idx = data.porUnidade.labels.indexOf(label);
+                return idx >= 0 ? data.porUnidade.adesaoPercent[idx] : null;
+            };
+
+            compChartInstances.unidade = new Chart(document.getElementById('compUnidadeChart'), {
+                type: 'bar',
+                data: {
+                    labels: allUnidades,
+                    datasets: [
+                        { label: `Período A`, data: allUnidades.map(u => getVal(compDataA.chartData, u)), backgroundColor: B, borderRadius: 4, maxBarThickness: 20 },
+                        { label: `Período B`, data: allUnidades.map(u => getVal(compDataB.chartData, u)), backgroundColor: '#94a3b8', borderRadius: 4, maxBarThickness: 20 }
+                    ]
+                },
+                options: {
+                    ...base,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { beginAtZero: true, min: 0, max: 100, grid: { color: '#eef2f6' }, border: { display: false }, ticks: { callback: v => `${v}%`, color: '#94a3b8', font: { size: 11 } } },
+                        y: { grid: { display: false }, border: { display: false }, ticks: { color: '#475569', font: { size: 11 }, autoSkip: false } }
+                    },
+                    plugins: { legend: { display: true }, tooltip: tip, datalabels: { display: false } }
+                }
+            });
+
+            document.getElementById('comp-results').classList.remove('hidden');
+        }
+
+        // ====================== RELATÓRIOS ======================
+        function renderReportSummary(kpis, insights) {
+            const adesao = parseFloat(kpis.adesaoGeral);
+            const status = adesao >= 80 ? 'Meta atingida' : adesao >= 60 ? 'Atenção necessária' : 'Abaixo da meta';
+            const statusColor = adesao >= 80 ? 'text-emerald-700 bg-emerald-50' : adesao >= 60 ? 'text-amber-700 bg-amber-50' : 'text-rose-700 bg-rose-50';
+
+            document.getElementById('report-summary').innerHTML = `
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div class="bg-slate-50 rounded-lg p-3 border border-slate-100">
+                        <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold mb-1">Adesão geral</p>
+                        <p class="text-2xl font-bold text-slate-800">${adesao.toFixed(1)}%</p>
+                    </div>
+                    <div class="bg-slate-50 rounded-lg p-3 border border-slate-100">
+                        <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold mb-1">Observações</p>
+                        <p class="text-2xl font-bold text-slate-800">${Number(kpis.totalObservacoes).toLocaleString('pt-BR')}</p>
+                    </div>
+                </div>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${statusColor}">
+                    ${status}
+                </span>
+                <p class="text-xs text-slate-400 mt-3">Gerado em ${new Date().toLocaleString('pt-BR')}</p>`;
+
+            document.getElementById('report-insights').innerHTML = (insights || []).map(insight => `
+                <div class="flex items-start gap-2.5 bg-slate-50 border border-slate-100 rounded-xl px-3.5 py-3 text-sm leading-snug text-slate-600 hover:border-emerald-100 hover:bg-emerald-50/40 transition">
+                    <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+                    <span>${insight}</span>
+                </div>`).join('') || '<p class="text-sm text-slate-400">Nenhum insight disponível para o período selecionado.</p>';
+        }
+
+        function printReport() {
+            switchTab('overview');
+            setTimeout(() => window.print(), 300);
         }
 
         // ====================== INSIGHTS ======================
